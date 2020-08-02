@@ -23,6 +23,6 @@ You will first need to setup your local environment and ensure that all configur
 ### Screenshots from testing the endpoints 
 
 - [homepage](screenshots/scrn1-task2.PNG)
-- [create-notes]()
-- [list-notes]()
-- [reading-contents]()
+- [create-notes](screenshots/create-note.PNG)
+- [list-notes](screenshots/list-notes.PNG)
+- [reading-contents](screenshots/read-contents.PNG)

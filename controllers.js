@@ -73,16 +73,90 @@ exports.newNote = (req, res) => {
 			} catch (error) {
 				console.log(`Error >>> ${error.message}`);
 			}
-
-			//fs.mkdirSync('views')
-			//fs.unlink('./wel.js')
 		}
 	});
 };
 
-exports.listAllNotes = (req, res) => {};
+exports.listNotes = (req, res) => {
+	let reqUrl = url.parse(req.url, true);
+
+	if (fs.existsSync("notes")) {
+		folder = reqUrl.query.folder;
+		title = reqUrl.query.title;
+		if (folder && !title) {
+			if (!fs.existsSync(`./notes/${folder}`)) {
+				let response = {
+					message: "No such folder within the notes directory",
+				};
+
+				res.statusCode = 404;
+				res.setHeader("Content-Type", "application/json");
+				res.end(JSON.stringify(response));
+				return;
+			}
+
+			fs.readdir(`./notes/${folder}`, (err, files) => {
+				if (err) return err;
+
+				let response = {
+					message: "List of notes",
+					files,
+				};
+
+				res.statusCode = 200;
+				res.setHeader("Content-Type", "application/json");
+				res.end(JSON.stringify(response));
+				return;
+			});
+		} else if (folder && title) {
+			if (!fs.existsSync(`./notes/${folder}/${title}.txt`)) {
+				let response = {
+					message: " There is no note with that title in any notes directory",
+				};
+
+				res.statusCode = 404;
+				res.setHeader("Content-Type", "application/json");
+				res.end(JSON.stringify(response));
+				return;
+			}
+
+			fs.readFile(`./notes/${folder}/${title}.txt`, "utf8", (err, data) => {
+				if (err) return err;
+				let response = {
+					message: "Notes displayed",
+					content: data,
+				};
+
+				res.statusCode = 200;
+				res.setHeader("Content-Type", "application/json");
+				res.end(JSON.stringify(response));
+				return;
+			});
+		} else {
+			let response = {
+				message: "You need to include the folder",
+			};
+
+			res.statusCode = 412;
+			res.setHeader("Content-Type", "application/json");
+			res.end(JSON.stringify(response));
+			return;
+		}
+	} else {
+		let response = {
+			message: "There's no notes to display. Create new notes",
+		};
+
+		res.statusCode = 404;
+		res.setHeader("Content-Type", "application/json");
+		res.end(JSON.stringify(response));
+		return;
+	}
+};
 
 //The notes app should let you record notes, create new files, organize the notes into different topics using directories, reading from the directories, reading the contents of the files
+
+exports.readFile;
 
 exports.invalidRoutes = (req, res) => {
 	const availableRoutes = [

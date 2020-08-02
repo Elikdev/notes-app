@@ -2,7 +2,12 @@ const http = require("http");
 const url = require("url");
 
 module.exports = http.createServer((req, res) => {
-	const { welcomePage, newNote, invalidRoutes } = require("./controllers");
+	const {
+		welcomePage,
+		newNote,
+		listNotes,
+		invalidRoutes,
+	} = require("./controllers");
 	const parsedUrl = url.parse(req.url, true);
 
 	//GET ENDPOINT
@@ -19,6 +24,11 @@ module.exports = http.createServer((req, res) => {
 			`Request Type: ${req.method} \n Endpoint: ${parsedUrl.pathname}`
 		);
 		newNote(req, res);
+	} else if (parsedUrl.pathname === "/notes" && req.method === "GET") {
+		console.log(
+			`Request Type: ${req.method} \n Endpoint: ${parsedUrl.pathname}`
+		);
+		listNotes(req, res);
 	} else {
 		console.log(
 			`Request Type: ${req.method} \n Endpoint: ${parsedUrl.pathname}`
